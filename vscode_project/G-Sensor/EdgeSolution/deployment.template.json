@@ -64,7 +64,11 @@
             "restartPolicy": "always",
             "settings": {
               "image": "${MODULES.DE10NanoGSensor}",
-              "createOptions": {}
+              "createOptions": {
+                "HostConfig": {
+                  "Privileged": true
+                }
+              }
             }
           }
         }
