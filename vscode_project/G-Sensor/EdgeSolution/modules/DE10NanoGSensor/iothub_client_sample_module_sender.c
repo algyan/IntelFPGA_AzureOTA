@@ -3,7 +3,18 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <errno.h>
+#include <string.h>
+#include <stddef.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <linux/i2c-dev.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include "ADXL345.h"
 #include "iothub_module_client_ll.h"
 #include "iothub_message.h"
 #include "azure_c_shared_utility/threadapi.h"
@@ -14,10 +25,12 @@
 #include "iothubtransportmqtt.h"
 #include "iothub.h"
 
+static const char* connectionString = "<Your IoT Edge Connection String>";
+
 static int callbackCounter;
 static char msgText[1024];
 static char propText[1024];
-#define MESSAGE_COUNT 500
+#define MESSAGE_COUNT 300
 #define DOWORK_LOOP_NUM     60
 
 
@@ -38,6 +51,55 @@ static void SendConfirmationCallback(IOTHUB_CLIENT_CONFIRMATION_RESULT result, v
 
 int main(void)
 {
+	int file;
+	const char *filename = "/dev/i2c-0";
+	uint8_t id;
+	bool bSuccess;
+	const int mg_per_digi = 4;
+	uint16_t szXYZ[3];
+	int cnt=0, max_cnt=0;
+	
+	printf("===== gsensor test =====\r\n");
+	
+	// open bus
+	if ((file = open(filename, O_RDWR)) < 0) {
+  	  /* ERROR HANDLING: you can check errno to see what went wrong */
+	    perror("Failed to open the i2c bus of gsensor");
+  	  exit(1);
+	}	
+	
+
+	// init	 
+	// gsensor i2c address: 101_0011
+	int addr = 0b01010011; 
+	if (ioctl(file, I2C_SLAVE, addr) < 0) {
+  	  printf("Failed to acquire bus access and/or talk to slave.\n");
+	    /* ERROR HANDLING; you can check errno to see what went wrong */
+  	  exit(1);
+	}	
+	
+
+    // configure accelerometer as +-2g and start measure
+    bSuccess = ADXL345_Init(file);
+    if (bSuccess){
+        // dump chip id
+        bSuccess = ADXL345_IdRead(file, &id);
+        if (bSuccess)
+            printf("id=%02Xh\r\n", id);
+    }        
+    
+    if (!bSuccess)
+    {
+        printf("Failed to access accelerometer\r\n");
+	
+		if (file)
+			close(file);
+			
+		printf("gsensor, bye!\r\n");    
+
+        return 0;
+    }
+
     IOTHUB_MODULE_CLIENT_LL_HANDLE iotHubModuleClientHandle;
     EVENT_INSTANCE messages[MESSAGE_COUNT];
 
@@ -64,15 +126,20 @@ int main(void)
         // IoTHubModuleClient_LL_SetOption(iotHubModuleClientHandle, OPTION_LOG_TRACE, &traceOn);
 
         size_t iterator = 0;
-        double temperature = 0;
-        double humidity = 0;
+
         do
         {
             if (iterator < MESSAGE_COUNT)
             {
-                temperature = minTemperature + (rand() % 10);
-                humidity = minHumidity +  (rand() % 20);
-                sprintf_s(msgText, sizeof(msgText), "{\"deviceId\":\"myFirstDevice\",\"windSpeed\":%.2f,\"temperature\":%.2f,\"humidity\":%.2f}", avgWindSpeed + (rand() % 4 + 2), temperature, humidity);
+                if (ADXL345_IsDataReady(file)){
+                    bSuccess = ADXL345_XYZ_Read(file, szXYZ);
+                    if (bSuccess){
+	                    cnt++;
+                        printf("[%d]X=%d mg, Y=%d mg, Z=%d mg\r\n", cnt, (int16_t)szXYZ[0]*mg_per_digi, (int16_t)szXYZ[1]*mg_per_digi, (int16_t)szXYZ[2]*mg_per_digi);
+                    }
+                }
+                sprintf_s(msgText, sizeof(msgText), "{\"count\":\"%d\",\"X\":%d,\"Y\":%d,\"Z\":%d}", cnt, (int16_t)szXYZ[0]*mg_per_digi, (int16_t)szXYZ[1]*mg_per_digi, (int16_t)szXYZ[2]*mg_per_digi);
+
                 if ((messages[iterator].messageHandle = IoTHubMessage_CreateFromString(msgText)) == NULL)
                 {
                     (void)printf("ERROR: iotHubMessageHandle is NULL!\r\n");
@@ -83,11 +150,8 @@ int main(void)
                     (void)IoTHubMessage_SetCorrelationId(messages[iterator].messageHandle, "CORE_ID");
 
                     messages[iterator].messageTrackingId = iterator;
-                    MAP_HANDLE propMap = IoTHubMessage_Properties(messages[iterator].messageHandle);
-                    (void)sprintf_s(propText, sizeof(propText), temperature > 28 ? "true" : "false");
-                    Map_AddOrUpdate(propMap, "temperatureAlert", propText);
 
-                    if (IoTHubModuleClient_LL_SendEventToOutputAsync(iotHubModuleClientHandle, messages[iterator].messageHandle, "temperatureOutput", SendConfirmationCallback, &messages[iterator]) != IOTHUB_CLIENT_OK)
+                    if (IoTHubModuleClient_LL_SendEventToOutputAsync(iotHubModuleClientHandle, messages[iterator].messageHandle, "gsensorOutput", SendConfirmationCallback, &messages[iterator]) != IOTHUB_CLIENT_OK)
                     {
                         (void)printf("ERROR: IoTHubModuleClient_LL_SendEventAsync..........FAILED!\r\n");
                     }

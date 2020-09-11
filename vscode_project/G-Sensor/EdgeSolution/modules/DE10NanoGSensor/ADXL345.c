@@ -1,7 +1,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <uninstd.h>
+#include <unistd.h>
 #include "ADXL345.h"
 
 #define DATA_READY_TIMEOUT  (alt_ticks_per_second()/3)
@@ -53,6 +53,7 @@ bool ADXL345_REG_MULTI_READ(int file, uint8_t readaddr,uint8_t readdata[], uint8
 		
 	return bSuccess;
 }
+
 
 bool ADXL345_Init(int file){
     bool bSuccess;
