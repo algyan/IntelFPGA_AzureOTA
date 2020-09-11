@@ -66,16 +66,6 @@
               "image": "${MODULES.DE10NanoGSensor}",
               "createOptions": {}
             }
-          },
-          "SimulatedTemperatureSensor": {
-            "version": "1.0",
-            "type": "docker",
-            "status": "running",
-            "restartPolicy": "always",
-            "settings": {
-              "image": "mcr.microsoft.com/azureiotedge-simulated-temperature-sensor:1.0",
-              "createOptions": {}
-            }
           }
         }
       }
@@ -84,8 +74,7 @@
       "properties.desired": {
         "schemaVersion": "1.0",
         "routes": {
-          "DE10NanoGSensorToIoTHub": "FROM /messages/modules/DE10NanoGSensor/outputs/* INTO $upstream",
-          "sensorToDE10NanoGSensor": "FROM /messages/modules/SimulatedTemperatureSensor/outputs/temperatureOutput INTO BrokeredEndpoint(\"/modules/DE10NanoGSensor/inputs/input1\")"
+          "DE10NanoGSensorToIoTHub": "FROM /messages/modules/DE10NanoGSensor/outputs/* INTO $upstream"
         },
         "storeAndForwardConfiguration": {
           "timeToLiveSecs": 7200
