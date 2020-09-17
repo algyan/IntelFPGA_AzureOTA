@@ -1,0 +1,16 @@
+# Quartus generated directories
+**/db/
+**/incremental_db/
+**/simulation/
+**/timing/
+**/testbench/
+**/*_sim/
+**/output_files/
+!**/output_files/*.sof
+!**/output_files/*.rbf
+!**/output_files/*.bat
+
+# Quartus default assignment setting files
+*.qdf
+# Quartus workspace window files
+*.qws
