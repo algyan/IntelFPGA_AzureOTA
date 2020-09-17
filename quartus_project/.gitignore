@@ -5,7 +5,11 @@
 **/timing/
 **/testbench/
 **/*_sim/
+**/greybox_tmp/
+**/.qsys_edit/
 **/output_files/*
+
+# 
 !**/output_files/*.sof
 !**/output_files/*.rbf
 !**/output_files/*.bat
@@ -14,3 +18,5 @@
 *.qdf
 # Quartus workspace window files
 *.qws
+# report files
+*.rpt
