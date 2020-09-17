@@ -5,7 +5,7 @@
 **/timing/
 **/testbench/
 **/*_sim/
-**/output_files/
+**/output_files/*
 !**/output_files/*.sof
 !**/output_files/*.rbf
 !**/output_files/*.bat
