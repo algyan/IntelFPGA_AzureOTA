@@ -101,7 +101,8 @@ module DE10_NANO_SOC_FB(
   wire               clk_65;
   wire               clk_130;
 // connection of internal logics
-  assign LED[7:1] = fpga_led_internal;
+  // comment out for another use
+  //assign LED[7:1] = fpga_led_internal;
   assign fpga_clk_50=FPGA_CLK1_50;
   assign stm_hw_events    = {{15{1'b0}}, SW, fpga_led_internal, fpga_debounced_buttons};
 
@@ -278,18 +279,24 @@ altera_edge_detector pulse_debug_reset (
 
 reg [25:0] counter;
 reg  led_level;
+reg   [3:0] led_counter;
 always @	(posedge fpga_clk_50 or negedge hps_fpga_reset_n)
 begin
 if(~hps_fpga_reset_n)
 begin
 		counter<=0;
 		led_level<=0;
+		led_counter<=0;
 end
 
 else if(counter==24999999)
 	begin
 		counter<=0;
 		led_level<=~led_level;
+		if (led_counter == 4'b1111)
+		   led_counter <= 0;
+		else
+		   led_counter <= led_counter + 1'b1;
 	end
 else
 		counter<=counter+1'b1;
@@ -297,6 +304,7 @@ end
 
 assign LED[0]=led_level;
 
-
+assign LED[1] = ~led_level;
+assign LED[7:4] = led_counter[3:0];
 
 endmodule
