@@ -23,7 +23,7 @@ FROM base
 WORKDIR /overlay
 # 必要なファイルをコンテナイメージ内にコピーする
 COPY ./soc_system_lchika.rbf ./
-COPY ./overlay_lchika.dtbo ./
+COPY ./overlay_lchika.dtso ./
 COPY ./overlay_lchika.sh ./
 # Device Tree Overlayのスクリプトを実行する
 RUN chmod +x /overlay/overlay_lchika.sh

@@ -69,7 +69,8 @@
                   "Privileged": true,
                   "Binds": [
                     "/lib/firmware:/lib/firmware",
-                    "/sys/kernel/config:/sys/kernel/config"
+                    "/sys/kernel/config:/sys/kernel/config",
+                    "/usr/bin/dtc:/usr/bin/dtc"
                   ]
                 },
                 "Mounts": [
@@ -85,6 +86,14 @@
                     "Type": "bind",
                     "Source": "/sys/kernel/config",
                     "Destination": "/sys/kernel/config",
+                    "Mode": "",
+                    "RW": true,
+                    "Propagation": "rprivate"
+                  },
+                  {
+                    "Type": "bind",
+                    "Source": "/usr/bin/dtc",
+                    "Destination": "/usr/bin/dtc",
                     "Mode": "",
                     "RW": true,
                     "Propagation": "rprivate"

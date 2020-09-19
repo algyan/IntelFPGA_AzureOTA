@@ -1,0 +1,43 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+  fragment@0 {
+
+    target-path = "/soc/base-fpga-region";
+    #address-cells = <0x1>;
+    #size-cells = <0x1>;
+
+    __overlay__ {
+
+        #address-cells = <2>;
+        #size-cells = <1>;
+        firmware-name = "soc_system_lchika.rbf";
+        //external-fpga-config;
+
+        fpga-bridges = <&fpga_bridge0 &fpga_bridge1>;
+
+        ranges = <0x00000000 0x00000000 0xc0000000 0x20000000>,
+                 <0x00000001 0x00000000 0xff200000 0x00200000>;
+
+      vip@0x100031000 {
+        compatible = "ALTR,vip-frame-reader-14.0", "ALTR,vip-frame-reader-9.1";
+        reg = <0x1 0x31000 0x80>; 
+        clocks = <&osc1>;
+        max-width = <0x400>;
+        max-height = <0x300>;
+        bits-per-color = <0x8>;
+        colors-per-beat = <0x4>;
+        beats-per-pixel = <0x1>;
+        mem-word-width = <0x80>;
+      };
+      sysid@0x100010000 {
+        compatible = "altr,sysid-16.0", "altr,sysid-1.0";
+        reg = <0x1 0x10000 0x8>;
+        clocks = <&osc1>;
+        //id = <0xacd51302>;
+        //timestamp = <0x5850ae6e>;
+      };
+    };
+  };
+};

@@ -2,6 +2,7 @@
 
 # ファイル名とディレクトリ名を定義する
 DTBO="overlay_lchika.dtbo"
+DTSO="overlay_lchika.dtso"
 RBF="soc_system_lchika.rbf"
 DTO_DIR="/sys/kernel/config/device-tree/overlays/socfpga"
 
@@ -18,6 +19,9 @@ if [ -d ${DTO_DIR} ];then
 else
     echo "Warning : ${DTO_DIR} does not exist"
 fi
+
+echo "Message : Compile device tree file"
+/usr/bin/dtc -@ -I dts -O dtb -o /overlay/${DTBO} /overlay/${DTSO}
 
 echo "Message : Copy dtbo & rbf file"
 cp /overlay/${DTBO} /lib/firmware
