@@ -64,17 +64,47 @@
             "restartPolicy": "always",
             "settings": {
               "image": "${MODULES.AwesomeLchika}",
-              "createOptions": {}
+              "createOptions": {
+                "HostConfig": {
+                  "Privileged": true,
+                  "Binds": [
+                    "/lib/firmware:/lib/firmware",
+                    "/sys/kernel/config:/sys/kernel/config"
+                  ]
+                },
+                "Mounts": [
+                  {
+                    "Type": "bind",
+                    "Source": "/lib/firmware",
+                    "Destination": "/lib/firmware",
+                    "Mode": "",
+                    "RW": true,
+                    "Propagation": "rprivate"
+                  },
+                  {
+                    "Type": "bind",
+                    "Source": "/sys/kernel/config",
+                    "Destination": "/sys/kernel/config",
+                    "Mode": "",
+                    "RW": true,
+                    "Propagation": "rprivate"
+                  }
+                ]
+              }
             }
           },
-          "SimulatedTemperatureSensor": {
+          "DE10NanoGSensor": {
             "version": "1.0",
             "type": "docker",
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "mcr.microsoft.com/azureiotedge-simulated-temperature-sensor:1.0",
-              "createOptions": {}
+              "image": "takasehideki/de10nano-g-sensor:0.0.1-arm32v7",
+              "createOptions": {
+                "HostConfig": {
+                  "Privileged": true
+                }
+              }
             }
           }
         }
