@@ -21,7 +21,7 @@ else
 fi
 
 echo "Message : Compile device tree file"
-/usr/bin/dtc -@ -I dts -O dtb -o /overlay/${DTBO} /overlay/${DTSO}
+/usr/local/bin/dtc -@ -I dts -O dtb -o /overlay/${DTBO} /overlay/${DTSO}
 
 echo "Message : Copy dtbo & rbf file"
 cp /overlay/${DTBO} /lib/firmware

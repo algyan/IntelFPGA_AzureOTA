@@ -70,7 +70,7 @@
                   "Binds": [
                     "/lib/firmware:/lib/firmware",
                     "/sys/kernel/config:/sys/kernel/config",
-                    "/usr/bin/dtc:/usr/bin/dtc"
+                    "/usr/local/bin/dtc:/usr/local/bin/dtc"
                   ]
                 },
                 "Mounts": [
