@@ -29,3 +29,14 @@ https://github.com/algyan/IntelFPGA_AzureOTA/issues
 - [F. FPGA回路から設計するには？](https://docs.google.com/document/d/1KIODum_KMib_BYQagTgrHQbNho3FVIhb-RZ6AjvQ70A)
 - [G. Azureサービスの利用料金とハンズオンの後始末](https://docs.google.com/document/d/1O96qw5h9BWHM8dWzEM3Uw5sXmbZesg-VSRyy_rfol7M)
 
+## ソースコード・設計データ
+
+- AlgyanOverlay/
+  - B.5.で実施するボード単体でのDevice Tree Overlay用のファイル（カーネルイメージに同梱済み）
+- quartus_project/
+  - LチカなFPGA回路のQuartus設計プロジェクト
+- vscode_project/
+  - G-Sensor/ ： C.7.でDocker HubからデプロイするDE10NanoGSensorモジュールのプロジェクト
+  - L-Chika/ ： E.3.で実装するAwesomeLchikaなIoT Edgeモジュールのプロジェクト
+    - E.8. のプロジェクトはmain branchにはマージしていません．[vsc_l-chika_dtc branch](https://github.com/algyan/IntelFPGA_AzureOTA/tree/vsc_l-chika_dtc/vscode_project)をご参照ください
+
