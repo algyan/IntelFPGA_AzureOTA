@@ -40,3 +40,6 @@ https://github.com/algyan/IntelFPGA_AzureOTA/issues
   - L-Chika/ ： E.3.で実装するAwesomeLchikaなIoT Edgeモジュールのプロジェクト
     - E.8. のプロジェクトはmain branchにはマージしていません．[vsc_l-chika_dtc branch](https://github.com/algyan/IntelFPGA_AzureOTA/tree/vsc_l-chika_dtc/vscode_project)をご参照ください
 
+ハンズオンのスタートラインとなるmicroSDカードのカーネルイメージは，下記をご利用ください．    
+http://lab3.kuis.kyoto-u.ac.jp/~takase/algyan/DE10-Nano-Cloud-Native_ALGYAN.zip
+
