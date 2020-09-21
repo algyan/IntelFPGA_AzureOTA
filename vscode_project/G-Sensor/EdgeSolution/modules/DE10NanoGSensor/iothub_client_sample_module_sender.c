@@ -30,7 +30,9 @@ static const char* connectionString = "<Your IoT Edge Connection String>";
 static int callbackCounter;
 static char msgText[1024];
 static char propText[1024];
-#define MESSAGE_COUNT 300
+//#define MESSAGE_COUNT 300
+// for MFT2020
+#define MESSAGE_COUNT 100
 #define DOWORK_LOOP_NUM     60
 
 

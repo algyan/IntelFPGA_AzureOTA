@@ -99,7 +99,7 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "takasehideki/de10nano-g-sensor:0.0.1-arm32v7",
+              "image": "takasehideki/de10nano-g-sensor:0.1.0-arm32v7",
               "createOptions": {
                 "HostConfig": {
                   "Privileged": true
